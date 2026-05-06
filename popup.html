@@ -1,0 +1,381 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8" />
+  <title>Coordi</title>
+  <style>
+    /* ---------- Material 3 color tokens (light) ---------- */
+    :root {
+      --md-primary: #0b57d0;
+      --md-on-primary: #ffffff;
+      --md-primary-container: #d3e3fd;
+      --md-on-primary-container: #001a41;
+
+      --md-secondary-container: #e1e3e1;
+      --md-on-secondary-container: #1f1f1f;
+
+      --md-tertiary-container: #ffd9e2;
+      --md-on-tertiary-container: #3e001d;
+
+      --md-error: #b3261e;
+      --md-on-error-container: #410e0b;
+      --md-error-container: #f9dedc;
+
+      --md-success: #0f9d58;
+
+      --md-surface: #fdfcff;
+      --md-surface-container-low: #f5f3f7;
+      --md-surface-container: #efedf1;
+      --md-surface-container-high: #e9e7eb;
+      --md-on-surface: #1c1b1f;
+      --md-on-surface-variant: #44474e;
+      --md-outline: #74777f;
+      --md-outline-variant: #c4c6cf;
+
+      --md-state-hover: rgba(11, 87, 208, 0.08);
+      --md-state-pressed: rgba(11, 87, 208, 0.12);
+      --md-state-on-hover: rgba(28, 27, 31, 0.08);
+      --md-state-on-pressed: rgba(28, 27, 31, 0.12);
+    }
+
+    /* ---------- Material 3 color tokens (dark) ---------- */
+    @media (prefers-color-scheme: dark) {
+      :root {
+        --md-primary: #a8c7fa;
+        --md-on-primary: #062e6f;
+        --md-primary-container: #0842a0;
+        --md-on-primary-container: #d3e3fd;
+
+        --md-secondary-container: #3c4043;
+        --md-on-secondary-container: #e3e3e3;
+
+        --md-tertiary-container: #633b48;
+        --md-on-tertiary-container: #ffd9e2;
+
+        --md-error: #f2b8b5;
+        --md-on-error-container: #f9dedc;
+        --md-error-container: #8c1d18;
+
+        --md-success: #81c995;
+
+        --md-surface: #131316;
+        --md-surface-container-low: #1d1b20;
+        --md-surface-container: #211f24;
+        --md-surface-container-high: #2b292f;
+        --md-on-surface: #e6e1e5;
+        --md-on-surface-variant: #c4c6cf;
+        --md-outline: #8e9099;
+        --md-outline-variant: #44474e;
+
+        --md-state-hover: rgba(168, 199, 250, 0.08);
+        --md-state-pressed: rgba(168, 199, 250, 0.12);
+        --md-state-on-hover: rgba(230, 225, 229, 0.08);
+        --md-state-on-pressed: rgba(230, 225, 229, 0.12);
+      }
+    }
+
+    * { box-sizing: border-box; }
+
+    html, body { margin: 0; padding: 0; }
+    body {
+      width: 300px;
+      padding: 12px;
+      font-family: "Google Sans", "Roboto", -apple-system, BlinkMacSystemFont,
+        "Segoe UI", system-ui, sans-serif;
+      background: var(--md-surface);
+      color: var(--md-on-surface);
+      font-size: 13px;
+      line-height: 1.35;
+    }
+
+    /* ---------- Top app bar ---------- */
+    .appbar {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      margin-bottom: 10px;
+    }
+    .appbar-icon {
+      width: 30px;
+      height: 30px;
+      border-radius: 50%;
+      background: var(--md-primary-container);
+      color: var(--md-on-primary-container);
+      display: grid;
+      place-items: center;
+      flex: none;
+    }
+    .appbar-icon svg { width: 18px; height: 18px; }
+    .appbar-title {
+      font-size: 15px;
+      font-weight: 500;
+      letter-spacing: 0;
+      margin: 0;
+      line-height: 1.15;
+    }
+    .appbar-subtitle {
+      font-size: 10px;
+      color: var(--md-on-surface-variant);
+      letter-spacing: 0.3px;
+    }
+
+    /* ---------- Cards / list items (Surface tonal containers) ---------- */
+    .card {
+      background: var(--md-surface-container-low);
+      border-radius: 12px;
+      padding: 8px 12px;
+      margin-bottom: 6px;
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      min-height: 44px;
+    }
+    .card-icon {
+      width: 18px;
+      height: 18px;
+      color: var(--md-on-surface-variant);
+      flex: none;
+    }
+    .card-body { flex: 1; min-width: 0; }
+    .card-label {
+      font-size: 10px;
+      color: var(--md-on-surface-variant);
+      letter-spacing: 0.5px;
+      text-transform: uppercase;
+      font-weight: 500;
+    }
+    .card-value {
+      font-size: 13px;
+      color: var(--md-on-surface);
+      word-break: break-word;
+      margin-top: 1px;
+      font-variant-numeric: tabular-nums;
+    }
+    .row { display: flex; gap: 6px; margin-bottom: 6px; }
+    .row .card { flex: 1; margin-bottom: 0; }
+
+    /* ---------- M3 Buttons ---------- */
+    .btn {
+      position: relative;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      gap: 6px;
+      height: 34px;
+      padding: 0 16px;
+      border: none;
+      border-radius: 17px;
+      font-family: inherit;
+      font-size: 12.5px;
+      font-weight: 500;
+      letter-spacing: 0.1px;
+      cursor: pointer;
+      transition: box-shadow 0.2s, background-color 0.2s;
+      overflow: hidden;
+      flex: 1;
+      width: 100%;
+    }
+    .btn svg { width: 16px; height: 16px; }
+    .btn::before {
+      content: "";
+      position: absolute;
+      inset: 0;
+      background: transparent;
+      transition: background 0.15s;
+      pointer-events: none;
+    }
+
+    /* Filled (primary) */
+    .btn-filled {
+      background: var(--md-primary);
+      color: var(--md-on-primary);
+    }
+    .btn-filled:hover::before { background: rgba(255,255,255,0.08); }
+    .btn-filled:active::before { background: rgba(255,255,255,0.12); }
+    @media (prefers-color-scheme: dark) {
+      .btn-filled:hover::before { background: rgba(0,0,0,0.08); }
+      .btn-filled:active::before { background: rgba(0,0,0,0.12); }
+    }
+
+    /* Tonal */
+    .btn-tonal {
+      background: var(--md-secondary-container);
+      color: var(--md-on-secondary-container);
+      height: 34px;
+      padding: 0 12px;
+    }
+    .btn-tonal:hover::before { background: var(--md-state-on-hover); }
+    .btn-tonal:active::before { background: var(--md-state-on-pressed); }
+
+    .btn:disabled {
+      background: color-mix(in srgb, var(--md-on-surface) 12%, transparent);
+      color: color-mix(in srgb, var(--md-on-surface) 38%, transparent);
+      cursor: not-allowed;
+    }
+    .btn:disabled::before { background: transparent !important; }
+
+    .btn-row { display: flex; gap: 6px; margin-top: 6px; }
+
+    /* ---------- M3 Switch ---------- */
+    .switch-row {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 10px;
+      padding: 6px 8px;
+      margin-top: 8px;
+      cursor: pointer;
+      user-select: none;
+      border-radius: 10px;
+    }
+    .switch-row:hover { background: var(--md-state-on-hover); }
+    .switch-text { min-width: 0; flex: 1; }
+    .switch-label {
+      font-size: 12px;
+      color: var(--md-on-surface);
+      font-weight: 500;
+    }
+    .switch-sub {
+      font-size: 10px;
+      color: var(--md-on-surface-variant);
+      margin-top: 1px;
+    }
+    .switch {
+      position: relative;
+      width: 40px;
+      height: 22px;
+      flex: none;
+    }
+    .switch input {
+      position: absolute;
+      opacity: 0;
+      width: 100%;
+      height: 100%;
+      margin: 0;
+      cursor: pointer;
+      z-index: 2;
+    }
+    .switch-track {
+      position: absolute;
+      inset: 0;
+      background: var(--md-surface-container-high);
+      border: 2px solid var(--md-outline);
+      border-radius: 11px;
+      transition: background 0.2s, border-color 0.2s;
+      box-sizing: border-box;
+    }
+    .switch-thumb {
+      position: absolute;
+      top: 50%;
+      left: 5px;
+      width: 10px;
+      height: 10px;
+      border-radius: 50%;
+      background: var(--md-outline);
+      transform: translate(0, -50%);
+      transition: left 0.2s, width 0.2s, height 0.2s, background 0.2s;
+    }
+    .switch input:checked ~ .switch-track {
+      background: var(--md-primary);
+      border-color: var(--md-primary);
+    }
+    .switch input:checked ~ .switch-thumb {
+      left: 22px;
+      width: 14px;
+      height: 14px;
+      background: var(--md-on-primary);
+    }
+
+    /* ---------- Snackbar / status ---------- */
+    .snackbar {
+      margin-top: 10px;
+      padding: 8px 12px;
+      border-radius: 8px;
+      background: var(--md-surface-container-high);
+      color: var(--md-on-surface);
+      font-size: 12px;
+      min-height: 0;
+      display: none;
+      align-items: center;
+      gap: 6px;
+    }
+    .snackbar.show { display: flex; }
+    .snackbar.ok { background: color-mix(in srgb, var(--md-success) 16%, var(--md-surface-container-high)); }
+    .snackbar.err {
+      background: var(--md-error-container);
+      color: var(--md-on-error-container);
+    }
+    .snackbar svg { width: 18px; height: 18px; flex: none; }
+
+    .empty { color: var(--md-on-surface-variant); font-style: italic; }
+  </style>
+</head>
+<body>
+  <div class="appbar">
+    <div class="appbar-icon">
+      <!-- Material Symbols: location_on -->
+      <svg viewBox="0 0 24 24" fill="currentColor" aria-hidden="true">
+        <path d="M12 2C8.13 2 5 5.13 5 9c0 5.25 7 13 7 13s7-7.75 7-13c0-3.87-3.13-7-7-7zm0 9.5a2.5 2.5 0 1 1 0-5 2.5 2.5 0 0 1 0 5z"/>
+      </svg>
+    </div>
+    <div>
+      <h1 class="appbar-title">Coordi</h1>
+      <div class="appbar-subtitle">Maps coordinate extractor</div>
+    </div>
+  </div>
+
+  <div class="card">
+    <svg class="card-icon" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true">
+      <path d="M12 2C8.13 2 5 5.13 5 9c0 5.25 7 13 7 13s7-7.75 7-13c0-3.87-3.13-7-7-7zm0 9.5a2.5 2.5 0 1 1 0-5 2.5 2.5 0 0 1 0 5z"/>
+    </svg>
+    <div class="card-body">
+      <div class="card-label">Address</div>
+      <div class="card-value" id="address"><span class="empty">—</span></div>
+    </div>
+  </div>
+
+  <div class="row">
+    <div class="card">
+      <div class="card-body">
+        <div class="card-label">Latitude</div>
+        <div class="card-value" id="lat"><span class="empty">—</span></div>
+      </div>
+    </div>
+    <div class="card">
+      <div class="card-body">
+        <div class="card-label">Longitude</div>
+        <div class="card-value" id="lng"><span class="empty">—</span></div>
+      </div>
+    </div>
+  </div>
+
+  <button id="copyAllBtn" class="btn btn-filled" disabled title="Copy address, lat, lng as tab-separated row">
+    <svg viewBox="0 0 24 24" fill="currentColor" aria-hidden="true">
+      <path d="M3 13h2v-2H3v2zm0 4h2v-2H3v2zm0-8h2V7H3v2zm4 4h14v-2H7v2zm0 4h14v-2H7v2zM7 7v2h14V7H7z"/>
+    </svg>
+    Copy Row for Sheets
+  </button>
+
+  <div class="btn-row">
+    <button id="copyAddrBtn" class="btn btn-tonal" disabled>Address only</button>
+    <button id="copyCoordsBtn" class="btn btn-tonal" disabled>Coords only</button>
+  </div>
+
+  <label class="switch-row" for="autoCopy">
+    <div class="switch-text">
+      <div class="switch-label">Auto-copy on pin change</div>
+      <div class="switch-sub">Copies in the background as you browse</div>
+    </div>
+    <span class="switch">
+      <input type="checkbox" id="autoCopy" />
+      <span class="switch-track"></span>
+      <span class="switch-thumb"></span>
+    </span>
+  </label>
+
+  <div class="snackbar" id="status" role="status" aria-live="polite"></div>
+
+  <script src="parser.js"></script>
+  <script src="popup.js"></script>
+</body>
+</html>
