@@ -2,6 +2,8 @@
 
 A Chrome extension that grabs the **address** and **coordinates** from a Google Maps tab and copies them to your clipboard â€” formatted to paste straight into Google Sheets.
 
+![Coordi Popup UI](doc/screenshot_1.png)
+
 ## What it does
 
 When you're on a Google Maps place page, Coordi extracts:
@@ -34,7 +36,7 @@ There's also an **auto-copy** mode: turn it on once, then browse Maps normally â
 
 1. Open any Google Maps place page.
 2. Click the Coordi icon in your toolbar.
-3. Click **Copy Row for Sheets**, **Address only**, or **Coords only**.
+3. Click **Copy** (for Google Sheets row), **Address only**, or **Coords only**.
 4. Paste anywhere.
 
 ### Auto-copy (hands-free)
