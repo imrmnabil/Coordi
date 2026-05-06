@@ -1,119 +1,53 @@
 # Coordi — Google Maps Coordinate Extractor
 
-A **Chrome Extension** (Manifest V3) that extracts coordinates and addresses from Google Maps URLs and copies them to your clipboard — optimized for pasting directly into Google Sheets.
+A Chrome extension that grabs the **address** and **coordinates** from a Google Maps tab and copies them to your clipboard — formatted to paste straight into Google Sheets.
 
-## ✨ Features
+## What it does
 
-- 🔍 **Smart URL Parsing** — Extracts precise coordinates from Google Maps place URLs (`!3d…!4d…` format) with fallback to camera position (`@lat,lng`)
-- 📋 **Google Sheets Ready** — "Copy All" outputs tab-separated values: `Address\tLat\tLng` for instant 3-column paste
-- 🤖 **Background Auto-Copy** — Enable in popup, then browse Maps normally — coordinates auto-copy to clipboard when you click new pins
-- 🎨 **Material 3 Design** — Modern Google design system with light/dark mode support
-- 🔒 **Privacy First** — Zero network calls, zero tracking, zero external dependencies
+When you're on a Google Maps place page, Coordi extracts:
 
-## 📦 Installation
+- **Address** — e.g. `7137 Captiva Cir, New Port Richey, FL 34655, USA`
+- **Latitude / Longitude** — e.g. `28.1923725, -82.696326`
 
-### From GitHub (Developer Mode)
+And copies them in three handy ways:
 
-1. **Download** this repository:
+- **Copy Row for Sheets** — tab-separated `Address⇥Lat⇥Lng`, fills 3 columns in one row when pasted into Google Sheets
+- **Address only** — just the street address
+- **Coords only** — just `lat, lng`
+
+There's also an **auto-copy** mode: turn it on once, then browse Maps normally — every time you click a new pin, the location is automatically copied to your clipboard, with a ✓ badge on the toolbar icon for confirmation.
+
+## Install
+
+1. Clone or download this repo:
    ```bash
-   git clone https://github.com/yourusername/coordi.git
-   cd coordi
+   git clone https://github.com/imrmnabil/Coordi.git
    ```
+2. Open `chrome://extensions` in Chrome.
+3. Toggle **Developer mode** (top right).
+4. Click **Load unpacked** and pick the `Coordi` folder.
+5. Pin the extension to your toolbar (puzzle icon → pin).
 
-2. **Open Chrome Extensions**:
-   - Navigate to `chrome://extensions`
-   - Toggle **Developer mode** (top-right switch)
+## How to use
 
-3. **Load Unpacked**:
-   - Click **"Load unpacked"** button
-   - Select the `coordi/` folder
-   - The Coordi icon will appear in your toolbar
+### Manual
 
-4. **Pin for easy access**:
-   - Click the puzzle icon in Chrome toolbar
-   - Click the pin next to "Coordi"
+1. Open any Google Maps place page.
+2. Click the Coordi icon in your toolbar.
+3. Click **Copy Row for Sheets**, **Address only**, or **Coords only**.
+4. Paste anywhere.
 
-## 🚀 Usage
+### Auto-copy (hands-free)
 
-### Manual Copy
+1. Open the popup once and turn on **Auto-copy on pin change**.
+2. Browse Google Maps normally — click pins, search places.
+3. Each new location is copied automatically. A green **✓** flashes on the toolbar icon when it succeeds.
+4. Paste rows straight into Google Sheets — each row drops into 3 columns.
 
-1. Navigate to any Google Maps place page (e.g., `https://www.google.com/maps/place/...`)
-2. Click the **Coordi icon** in your toolbar
-3. Click one of:
-   - **"Copy all to clipboard"** — Address + Lat + Lng (tab-separated for Sheets)
-   - **"Address"** — Just the street address
-   - **"Coords"** — Just `lat, lng`
+## Privacy
 
-### Auto-Copy (Hands-Free)
+No network calls, no analytics, no tracking. Everything happens locally by reading the URL of your active Maps tab.
 
-Perfect for rapid data entry:
+## License
 
-1. Open Coordi popup → Enable **"Auto-copy on location change"**
-2. Browse Google Maps normally — click different places, search new addresses
-3. Each new location automatically copies to clipboard
-4. **Visual feedback**: Badge shows ✅ on success, ⚠️ on error
-
-Paste into Google Sheets — each "Copy All" fills 3 adjacent columns in one row.
-
-## 🏗️ Architecture
-
-```
-coordi/
-├── manifest.json          # MV3 manifest + permissions
-├── parser.js              # Shared URL parser (popup + background)
-├── popup.html / popup.js  # Material 3 UI (manual copy)
-├── background.js          # Service worker (auto-copy watcher)
-├── offscreen.html/.js     # Clipboard bridge (MV3 requirement)
-└── icons/                 # Generated PNG icons (16/48/128)
-```
-
-### How Auto-Copy Works
-
-Google Maps is a Single Page App (SPA) — the URL updates without page reloads. The **background service worker**:
-
-1. Listens to `chrome.tabs.onUpdated` for URL changes
-2. Parses via shared `parser.js` module
-3. Uses **fingerprint deduplication** (address+lat+lng hash) to avoid re-copying same location
-4. Writes to clipboard via **offscreen document** (MV3 service workers can't access `navigator.clipboard` directly)
-5. Shows **badge feedback** (✅/⚠️) without opening popup
-
-## 🛡️ Permissions
-
-| Permission | Purpose |
-|------------|---------|
-| `activeTab` | Read current tab URL when popup opens |
-| `clipboardWrite` | Copy coordinates to clipboard |
-| `storage` | Persist auto-copy toggle preference |
-| `tabs` | Monitor URL changes for auto-copy |
-| `offscreen` | Bridge for background clipboard writes |
-
-**Host permissions**: `google.com/maps/*`, `maps.google.com/*`
-
-No external API calls. No analytics. No data collection.
-
-## 📝 Example
-
-**Input URL:**
-```
-https://www.google.com/maps/place/7137+Captiva+Cir,+New+Port+Richey,+FL+34655,+USA/@28.1923725,-82.6968732,19z/data=!4m6!3m5!1s0x88c2922bf80f4a47:0xa31ea7428153184d!8m2!3d28.1923725!4d-82.696326
-```
-
-**Copy All output:**
-```
-7137 Captiva Cir, New Port Richey, FL 34655, USA	28.1923725	-82.696326
-```
-
-**Paste into Google Sheets:**
-| A | B | C |
-|---|---|---|
-| 7137 Captiva Cir, New Port Richey, FL 34655, USA | 28.1923725 | -82.696326 |
-
-## 📄 License
-
-MIT License — feel free to fork and modify for your own use.
-
-## 🤝 Credits
-
-- Custom icons in `icons/` folder (16/48/128 PNGs)
-- UI designed with [Material 3](https://m3.material.io/) design tokens
-- Built for the Chrome Manifest V3 platform
+MIT

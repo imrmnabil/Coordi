@@ -43,15 +43,41 @@ async function copyToClipboard(text) {
   });
 }
 
-function flashBadge(tabId, ok) {
-  const text = ok ? "✓" : "!";
-  const color = ok ? "#0f9d58" : "#b3261e";
+const DEFAULT_ICON = {
+  16: "icons/icon16.png",
+  48: "icons/icon48.png",
+  128: "icons/icon128.png",
+};
+const TICK_ICON = {
+  16: "icons/tick16.png",
+  48: "icons/tick48.png",
+  128: "icons/tick128.png",
+};
+
+const flashTimers = new Map();
+
+function flashFeedback(tabId, ok) {
+  if (!ok) {
+    // Keep the small red badge for failures (no icon swap).
+    try {
+      chrome.action.setBadgeBackgroundColor({ color: "#b3261e" });
+      chrome.action.setBadgeText({ text: "!", tabId });
+      setTimeout(() => chrome.action.setBadgeText({ text: "", tabId }), 1500);
+    } catch {}
+    return;
+  }
   try {
-    chrome.action.setBadgeBackgroundColor({ color });
-    chrome.action.setBadgeText({ text, tabId });
-    setTimeout(() => {
-      chrome.action.setBadgeText({ text: "", tabId });
-    }, 1500);
+    chrome.action.setIcon({ tabId, path: TICK_ICON });
+    clearTimeout(flashTimers.get(tabId));
+    flashTimers.set(
+      tabId,
+      setTimeout(() => {
+        try {
+          chrome.action.setIcon({ tabId, path: DEFAULT_ICON });
+        } catch {}
+        flashTimers.delete(tabId);
+      }, 1500)
+    );
   } catch {}
 }
 
@@ -71,7 +97,7 @@ async function handleTabUrl(tabId, url) {
 
   const text = CoordiParser.buildClipboardText(data, "all");
   const ok = await copyToClipboard(text);
-  flashBadge(tabId, ok);
+  flashFeedback(tabId, ok);
 }
 
 chrome.tabs.onUpdated.addListener((tabId, changeInfo, tab) => {
